@@ -16,6 +16,44 @@
 <p>Total Dépenses Ponctuelles: {{ total_depenses_ponctuelles }}€</p>
 <p>Solde: {{ solde }}€</p>
 
+<div>
+    <a href="{% url 'ajout_revenu' %}" class="btn btn-primary">Ajouter un Revenu</a>
+    <a href="{% url 'ajout_depense_recurrente' %}" class="btn btn-primary">Ajouter une Dépense récurrentes</a>
+    <a href="{% url 'ajout_depense_ponctuelle' %}" class="btn btn-primary">Ajouter une Dépense ponctuelle</a>
+</div>
+
+<h2>Dépenses Récurrentes</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Montant</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+        {% for depense in depenses_recurrentes %}
+        <tr>
+            <td>{{ depense.nom }}</td>
+            <td>{{ depense.montant }}€</td>
+            <td>
+                {% if depense.statut %}
+                    <span style="color: green;">Payée</span>
+                {% else %}
+                    <span style="color: red;">Non payée</span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{% url 'pointer_depense_recurrente' depense.pk %}" class="btn btn-secondary">
+                    {% if depense.statut %} Décocher {% else %} Pointer comme payée {% endif %}
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 <h2>Graphique de Répartition</h2>
 <canvas id="graphDepenses" width="400" height="200"></canvas>
 
@@ -57,8 +95,6 @@
         }
     });
 </script>
-
-
 
 </body>
 </html>

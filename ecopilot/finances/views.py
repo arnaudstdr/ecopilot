@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Revenu, DepenseRecurrente, DepensePonctuelle
 from .forms import RevenuForm, DepesneRecurrentForm, DepensePonctuelleForm, UserRegistrationForm
@@ -26,7 +26,15 @@ def dashboard(request):
         'total_depenses_ponctuelles': total_depenses_ponctuelles,
         'solde': solde
     }
-    return render(request, 'finances/dashboard.html', context)
+    return render(request, 'finances/dashboard.html', {
+        'revenus': revenus,
+        'depenses_recurrentes': depenses_recurrentes,
+        'depenses_ponctuelles': depenses_ponctuelles,
+        'total_revenu': total_revenu,
+        'total_depenses_recurrentes': total_depenses_recurrentes,
+        'total_depenses_ponctuelles': total_depenses_ponctuelles,
+        'solde': solde
+    })
 
 @login_required
 def ajout_revenu(request):
@@ -69,6 +77,13 @@ def ajout_depense_ponctuelle(request):
         form = DepensePonctuelleForm()
 
     return render(request, 'finances/ajout_depense_ponctuelle.html', {'form': form})
+
+@login_required
+def pointer_depense_recurrente(request, pk):
+    depense = get_object_or_404(DepenseRecurrente, pk=pk, utilisateur=request.user)
+    depense.statut = not depense.statut
+    depense.save()
+    return redirect('dashboard')
 
 def login_view(request):
     if request.method == 'POST':
