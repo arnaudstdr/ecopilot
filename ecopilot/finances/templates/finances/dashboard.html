@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -5,8 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de bord - Finances</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'finances/css/style.css' %}">
 </head>
 <body>
+
+<!-- Boutons de Connexion/Déconnexion -->
+<div class="auth-buttons">
+    {% if user.is_authenticated %}
+        <span>Bonjour, {{ user.username }} !</span>
+        <form method="post" action="{% url 'logout' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary">Se déconnecter</button>
+        </form>
+    {% else %}
+        <a href="{% url 'login' %}" class="btn btn-primary">Se connecter</a>
+    {% endif %}
+</div>
+
 
 <h1>Tableau de bord - {{ month_name }} {{ year  }}</h1>
 

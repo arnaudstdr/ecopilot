@@ -1,3 +1,6 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'finances/css/style.css' %}">
+</head>
 <h2>Connexion</h2>
 <form method="post">
     {% csrf_token %}
