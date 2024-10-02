@@ -8,7 +8,12 @@
 </head>
 <body>
 
-<h1>Tableau de bord</h1>
+<h1>Tableau de bord - {{ month_name }} {{ year  }}</h1>
+
+<div>
+    <a href="{% url 'dashboard_with_date' prev_year prev_month %}" class="btn btn-secondary">Mois Précédent</a>
+    <a href="{% url 'dashboard_with_date' next_year next_month %}" class="btn btn-secondary">Mois Suivant</a>
+</div>
 
 <h2>Résumé Financier</h2>
 <p>Total Revenu: {{ total_revenu }}€</p>
@@ -49,6 +54,28 @@
                     {% if depense.statut %} Décocher {% else %} Pointer comme payée {% endif %}
                 </a>
             </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Dépenses Ponctuelles</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Montant</th>
+            <th>Date</th>
+            <th>Catégorie</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for depense in depenses_ponctuelles %}
+        <tr>
+            <td>{{ depense.nom }}</td>
+            <td>{{ depense.montant }}€</td>
+            <td>{{ depense.date }}</td>
+            <td>{{ depense.categorie }}</td>
         </tr>
         {% endfor %}
     </tbody>

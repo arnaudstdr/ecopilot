@@ -4,11 +4,23 @@ from .models import Revenu, DepenseRecurrente, DepensePonctuelle
 from .forms import RevenuForm, DepesneRecurrentForm, DepensePonctuelleForm, UserRegistrationForm
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
-from datetime import date
+from datetime import date, datetime
+import calendar
+import locale
 
 # Create your views here.
 @login_required
-def dashboard(request):
+def dashboard(request, year=None, month=None):
+    # Si le mois et l'année ne sont pas précisés, utilise le mois courant
+    if not year or not month:
+        today = date.today()
+        year = today.year
+        month = today.month
+
+    # Obtenir la date du premier jour du mois pour les filtres
+    first_day = datetime(year, month, 1)
+    last_day = datetime(year, month, calendar.monthrange(year, month)[1])
+
     revenus = Revenu.objects.filter(utilisateur=request.user, date_reception__month=date.today().month)
     depenses_recurrentes = DepenseRecurrente.objects.filter(utilisateur=request.user)
     depenses_ponctuelles = DepensePonctuelle.objects.filter(utilisateur=request.user, date__month=date.today().month)
@@ -19,22 +31,35 @@ def dashboard(request):
 
     solde = total_revenu - (total_depenses_recurrentes + total_depenses_ponctuelles)
     
+    # Calcule des mois précédents et suivants pour la navigation
+    prev_month = (month - 1) if month > 1 else 12
+    prev_year = year if month > 1 else year - 1
+    next_month = (month + 1) if month < 12 else 1
+    next_year = year if month < 12 else year + 1
+
+    # Configurer le locale en français
+    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+    # Obtenir le nom du mois
+    month_name = first_day.strftime('%B')
+
     # On transmet les données nécessaires pour les graphiques
     context = {
-        'total_revenu': total_revenu,
-        'total_depenses_recurrentes': total_depenses_recurrentes,
-        'total_depenses_ponctuelles': total_depenses_ponctuelles,
-        'solde': solde
-    }
-    return render(request, 'finances/dashboard.html', {
         'revenus': revenus,
         'depenses_recurrentes': depenses_recurrentes,
         'depenses_ponctuelles': depenses_ponctuelles,
         'total_revenu': total_revenu,
         'total_depenses_recurrentes': total_depenses_recurrentes,
         'total_depenses_ponctuelles': total_depenses_ponctuelles,
-        'solde': solde
-    })
+        'solde': solde,
+        'year': year,
+        'month': month,
+        'month_name': month_name,
+        'prev_month': prev_month,
+        'prev_year': prev_year,
+        'next_month': next_month,
+        'next_year': next_year
+    }
+    return render(request, 'finances/dashboard.html', context)
 
 @login_required
 def ajout_revenu(request):
