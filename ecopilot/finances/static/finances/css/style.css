@@ -166,3 +166,29 @@ form input[type="submit"]:hover {
     background: none;
     box-shadow: none;
 }
+
+/* Supprimer les flèches sur le champ de type number (Chrome, Safari, Edge, Opera) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Pour Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Styles pour les champs du formulaire */
+form input[type="text"],
+form input[type="password"],
+form input[type="email"],
+form input[type="number"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
