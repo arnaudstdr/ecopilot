@@ -17,13 +17,14 @@ def dashboard(request, year=None, month=None):
         year = today.year
         month = today.month
 
-    # Obtenir la date du premier jour du mois pour les filtres
+    # Obtenir le premier et le dernier jour du mois
     first_day = datetime(year, month, 1)
     last_day = datetime(year, month, calendar.monthrange(year, month)[1])
 
-    revenus = Revenu.objects.filter(utilisateur=request.user, date_reception__month=date.today().month)
-    depenses_recurrentes = DepenseRecurrente.objects.filter(utilisateur=request.user)
-    depenses_ponctuelles = DepensePonctuelle.objects.filter(utilisateur=request.user, date__month=date.today().month)
+    # Filtrer les données en fonction du mois sélectionné
+    revenus = Revenu.objects.filter(utilisateur=request.user, date_reception__range=[first_day, last_day])
+    depenses_recurrentes = DepenseRecurrente.objects.filter(utilisateur=request.user, date_debut__lte=last_day)
+    depenses_ponctuelles = DepensePonctuelle.objects.filter(utilisateur=request.user, date__range=[first_day, last_day])
 
     total_revenu = sum(revenu.montant for revenu in revenus)
     total_depenses_recurrentes = sum(depense.montant for depense in depenses_recurrentes if depense.statut)
