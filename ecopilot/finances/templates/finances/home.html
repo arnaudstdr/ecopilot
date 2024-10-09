@@ -1,0 +1,25 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecopilot</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'finances/css/style.css' %}">
+
+<body class="bg-light">
+    <div class="container centered-container">
+        <h1>Bienvenue sur l'application de gestion des finances</h1>
+        <p>Gérez vos revenus, dépenses, et bien plus encore !</p>
+
+        <!-- Boutons pour Se Connecter ou S'inscrire -->
+        <div class="btn-container">
+            <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Se connecter</a>
+            <a href="{% url 'signup' %}" class="btn btn-secondary btn-lg ml-2">Créer un compte</a>
+        </div>
+    </div>
+</body>
+</html>
