@@ -9,8 +9,29 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'finances/css/style.css' %}">
+    <style>
+        /* Centrer tout dans la page d'accueil */
+        .centered-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Prendre toute la hauteur de la page */
+        }
 
-<body class="bg-light">
+        /* Ajout d'un peu d'espacement entre les boutons */
+        .btn-container {
+            margin-top: 20px;
+        }
+
+        .btn-container a {
+            margin-right: 10px;
+            margin-left: 10px;
+        }
+    </style>
+    
+</head>
+<body>
     <div class="container centered-container">
         <h1>Bienvenue sur l'application de gestion des finances</h1>
         <p>Gérez vos revenus, dépenses, et bien plus encore !</p>
