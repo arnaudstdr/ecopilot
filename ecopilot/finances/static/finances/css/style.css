@@ -28,6 +28,11 @@ h1 {
     margin-bottom: 20px;
 }
 
+.registration-link {
+    text-align: center;
+    margin-top: 20px; /* Ajuste l'espacement au besoin */
+}
+
 /* Boutons */
 .btn {
     display: inline-block;
@@ -191,8 +196,4 @@ form input[type="number"] {
     border-radius: 5px;
     font-size: 16px;
     box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-p {
-    text-align: center;
 }
