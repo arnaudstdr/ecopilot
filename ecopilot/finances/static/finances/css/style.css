@@ -33,6 +33,22 @@ h1 {
     margin-top: 20px; /* Ajuste l'espacement au besoin */
 }
 
+.month {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px;  
+    width: auto;   
+}
+
+.action-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px;
+    width: auto;  
+}
+
 /* Boutons */
 .btn {
     display: inline-block;
@@ -109,7 +125,7 @@ span[style="color: red;"] {
 /* Formulaire général */
 form {
     max-width: 400px;
-    margin: 0 auto;
+    margin: auto;
     padding: 20px;
     background-color: white;
     border-radius: 10px;

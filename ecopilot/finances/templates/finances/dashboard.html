@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de bord - Finances</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
     <link rel="stylesheet" type="text/css" href="{% static 'finances/css/style.css' %}">
 </head>
 <body>
@@ -28,7 +28,7 @@
 
 <h1>Tableau de bord - {{ month_name }} {{ year  }}</h1>
 
-<div>
+<div class="month">
     <a href="{% url 'dashboard_with_date' prev_year prev_month %}" class="btn btn-secondary">Mois Précédent</a>
     <a href="{% url 'dashboard_with_date' next_year next_month %}" class="btn btn-secondary">Mois Suivant</a>
 </div>
@@ -39,7 +39,7 @@
 <p>Total Dépenses Ponctuelles: {{ total_depenses_ponctuelles }}€</p>
 <p>Solde: {{ solde }}€</p>
 
-<div>
+<div class="action-btn">
     <a href="{% url 'ajout_revenu' %}" class="btn btn-primary">Ajouter un Revenu</a>
     <a href="{% url 'ajout_depense_recurrente' %}" class="btn btn-primary">Ajouter une Dépense récurrentes</a>
     <a href="{% url 'ajout_depense_ponctuelle' %}" class="btn btn-primary">Ajouter une Dépense ponctuelle</a>
@@ -55,11 +55,11 @@
             <th>Actions</th>
         </tr>
     </thead>
-    <tbody></tbody>
-        {% for depense in depenses_recurrentes %}
+    <tbody>
+        {% for depense in depenses_recurrentes_mensuelles %}
         <tr>
-            <td>{{ depense.nom }}</td>
-            <td>{{ depense.montant }}€</td>
+            <td>{{ depense.depense_recurrente.nom }}</td>
+            <td>{{ depense.depense_recurrente.montant }}€</td>
             <td>
                 {% if depense.statut %}
                     <span style="color: green;">Payée</span>
@@ -75,6 +75,13 @@
         </tr>
         {% endfor %}
     </tbody>
+    <!-- Bouton pour décocher toutes les dépenses récurrentes -->
+    <form action="{% url 'decocher_toutes_les_depenses' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-warning">Décocher toutes les dépenses récurrentes</button>
+    </form>
+    
+    
 </table>
 
 <h2>Dépenses Ponctuelles</h2>

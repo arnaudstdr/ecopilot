@@ -12,13 +12,13 @@
 </head>
 
 <body>
+    <!-- Bouton Retour au Dashboard -->
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary" style="margin-top: 20px;">Retour au tableau de bord</a>
+    
     <h1>Ajouter une Dépense Ponctuelle</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Ajouter</button>
     </form>
-    
-    <!-- Bouton Retour au Dashboard -->
-    <a href="{% url 'dashboard' %}" class="btn btn-secondary" style="margin-top: 20px;">Retour au tableau de bord</a>
 </body>

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Revenu, DepenseRecurrente, DepensePonctuelle
+from .models import Revenu, DepenseRecurrente, DepensePonctuelle, DepenseRecurrenteMensuelle
 from .forms import RevenuForm, DepesneRecurrentForm, DepensePonctuelleForm, UserRegistrationForm
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
@@ -29,11 +29,29 @@ def dashboard(request, year=None, month=None):
 
     # Filtrer les données en fonction du mois sélectionné
     revenus = Revenu.objects.filter(utilisateur=request.user, date_reception__range=[first_day, last_day])
-    depenses_recurrentes = DepenseRecurrente.objects.filter(utilisateur=request.user, date_debut__lte=last_day)
     depenses_ponctuelles = DepensePonctuelle.objects.filter(utilisateur=request.user, date__range=[first_day, last_day])
 
+    # Gestion des dépenses récurrentes par mois
+    depenses_recurrentes = DepenseRecurrente.objects.filter(utilisateur=request.user, date_debut__lte=last_day)
+
+    # Pour chaque dépense récurrente, on vérifie si une dépense mensuelle existe, sinon on la crée
+    for depense in depenses_recurrentes:
+        DepenseRecurrenteMensuelle.objects.get_or_create(
+            depense_recurrente=depense,
+            utilisateur=request.user,
+            mois=month,
+            annee=year,
+            defaults={'statut': False}  # Par défaut, la dépense n'est pas encore payée
+        )
+
+    # Récupérer les dépenses récurrentes mensuelles pour le mois en cours
+    depenses_recurrentes_mensuelles = DepenseRecurrenteMensuelle.objects.filter(
+        utilisateur=request.user, mois=month, annee=year
+    )
+
+    # Calculer les montants totaux
     total_revenu = sum(revenu.montant for revenu in revenus)
-    total_depenses_recurrentes = sum(depense.montant for depense in depenses_recurrentes if depense.statut)
+    total_depenses_recurrentes = sum(depense.depense_recurrente.montant for depense in depenses_recurrentes_mensuelles if depense.statut)
     total_depenses_ponctuelles = sum(depense.montant for depense in depenses_ponctuelles)
 
     solde = total_revenu - (total_depenses_recurrentes + total_depenses_ponctuelles)
@@ -52,7 +70,7 @@ def dashboard(request, year=None, month=None):
     # On transmet les données nécessaires pour les graphiques
     context = {
         'revenus': revenus,
-        'depenses_recurrentes': depenses_recurrentes,
+        'depenses_recurrentes_mensuelles': depenses_recurrentes_mensuelles,
         'depenses_ponctuelles': depenses_ponctuelles,
         'total_revenu': total_revenu,
         'total_depenses_recurrentes': total_depenses_recurrentes,
@@ -112,10 +130,47 @@ def ajout_depense_ponctuelle(request):
 
 @login_required
 def pointer_depense_recurrente(request, pk):
-    depense = get_object_or_404(DepenseRecurrente, pk=pk, utilisateur=request.user)
-    depense.statut = not depense.statut
-    depense.save()
+    try:
+        # Obtenir la dépense récurrente
+        depense = DepenseRecurrente.objects.get(pk=pk, utilisateur=request.user)
+    except DepenseRecurrente.DoesNotExist:
+        return HttpResponse("La dépense récurrente avec cet ID n'existe pas ou n'appartient pas à cet utilisateur.")
+
+    # Obtenir le mois et l'année en cours
+    aujourd_hui = date.today()
+    mois = aujourd_hui.month
+    annee = aujourd_hui.year
+
+    # Obtenir ou créer la dépense récurrente mensuelle pour ce mois et cette année
+    depense_mensuelle, created = DepenseRecurrenteMensuelle.objects.get_or_create(
+        depense_recurrente=depense,
+        utilisateur=request.user,
+        mois=mois,
+        annee=annee,
+        defaults={'statut': False}  # Par défaut, la dépense n'est pas encore payée
+    )
+
+    # Mettre à jour le statut de la dépense pour le mois en cours (marquer comme payée/non payée)
+    depense_mensuelle.statut = not depense_mensuelle.statut
+    depense_mensuelle.save()
+
+    # Rediriger vers le tableau de bord ou une autre vue
     return redirect('dashboard')
+
+@login_required
+def decocher_toutes_les_depenses(request):
+    # Obtenir le mois et l'année en cours
+    aujourd_hui = date.today()
+    mois = aujourd_hui.month
+    annee = aujourd_hui.year
+    
+    # Mettre à jour uniquement les dépenses du mois en cours
+    DepenseRecurrenteMensuelle.objects.filter(
+        utilisateur=request.user, mois=mois, annee=annee
+    ).update(statut=False)
+
+    return redirect('dashboard')  # Redirige vers le tableau de bord
+
 
 def login_view(request):
     if request.method == 'POST':
