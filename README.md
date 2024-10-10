@@ -79,5 +79,5 @@ Ce projet est sous licence MIT - consultez le fichier LICENSE pour plus de déta
 ## Contact
 
 Si vous avez des questions ou des suggestions, n'hésitez pas à me contacter :
-- Nom : Arnaud S.
+- Nom : Arnaud Stadler
 - Email : arnaud.stadler@ikmail.com
