@@ -4,12 +4,17 @@ EcoPilot est une application web conçue pour aider les utilisateurs à suivre e
 
 ## Fonctionnalités
 
-    - Suivi quotidien des dépenses : Enregistrez vos dépenses journalières avec des catégories personnalisées.
-    - Visualisation des données : Affichez des graphiques pour visualiser les tendances de vos dépenses sur des périodes définies.
-    - Budget mensuel : Définissez un budget et recevez des alertes si vos dépenses dépassent le seuil que vous avez fixé.
-    - Rapports détaillés : Consultez des rapports de dépenses pour comprendre vos habitudes de consommation et identifier les domaines où vous pouvez économiser.
-    - Interface intuitive : Simple à utiliser avec un design moderne pour une prise en main rapide.
+- Suivi quotidien des dépenses : Enregistrez vos dépenses journalières avec des catégories personnalisées.
+- Visualisation des données : Affichez des graphiques pour visualiser les tendances de vos dépenses sur des périodes définies.
+- Budget mensuel : Définissez un budget et recevez des alertes si vos dépenses dépassent le seuil que vous avez fixé.
+- Rapports détaillés : Consultez des rapports de dépenses pour comprendre vos habitudes de consommation et identifier les domaines où vous pouvez économiser.
+- Interface intuitive : Simple à utiliser avec un design moderne pour une prise en main rapide.
 
 ## Capture d'écran
 
-## Capture d'écran
+## Installation
+
+1. Clonez ce dépôt sur votre machine locale :
+```
+git clone hhtps://github.com/arnaudstdr/ecopilot.git
+```
